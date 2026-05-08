@@ -1,7 +1,6 @@
 # Intrax+ Intelligence
 
-A modern, sleek network diagnostics tool built with vanilla JavaScript and glassmorphism design. Intrax+ provides real-time insights into your network performance with an elegant, interactive interface.
-
+A modern, sleek network diagnostics tool built with vanilla JavaScript and glassmorphism design. Intrax+ provides real-time insights into your network performance with an elegant, interactive interface. 
 ![HTML5](https://img.shields.io/badge/HTML5-E34C26?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
@@ -157,7 +156,7 @@ GitHub: [@shizuadev](https://github.com/shizuadev)
 
 ## Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to fork the repository and submit pull requests.
+DM At @sakai.ss in discord for forking, please.
 
 ## Changelog
 
@@ -165,9 +164,7 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 - Initial release
 - Core diagnostics functionality
 - Global edge node selection
-- Advanced telemetry collection
-- Premium glassmorphism UI
 
 ---
-
+⚠ README FILE IS MADE WITH AI BECAUSE TO MEET MY PERSONAL DEADLINE ⚠
 **Made with ❤️**
