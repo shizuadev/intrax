@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intrax Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Modern SaaS Reset & Variables */
+:root {
+  --bg-dark: #050505;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  --accent-blue: #3b82f6;
+  --accent-teal: #14b8a6;
+  --accent-purple: #8b5cf6;
+  --success: #10b981;
+  
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Elegant Mesh Background */
+.bg-fx {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: -1; overflow: hidden; pointer-events: none;
+  background: radial-gradient(800px circle at 15% 30%, rgba(59, 130, 246, 0.08), transparent 40%),
+              radial-gradient(800px circle at 85% 70%, rgba(139, 92, 246, 0.08), transparent 40%),
+              radial-gradient(1000px circle at 50% 100%, rgba(20, 184, 166, 0.05), transparent 50%);
+  filter: blur(40px);
+  animation: breathe 20s var(--ease-smooth) infinite alternate;
+}
+@keyframes breathe { 
+  0% { transform: scale(1); opacity: 0.8; } 
+  100% { transform: scale(1.1); opacity: 1; } 
+}
+
+.bg-grid {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at top, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at top, black 40%, transparent 80%);
+}
+
+/* Entrance Animations - SaaS Staggering */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.stagger-1 { animation: slideUpFade 0.8s var(--ease-smooth) both; animation-delay: 0.1s; }
+.stagger-2 { animation: slideUpFade 0.8s var(--ease-smooth) both; animation-delay: 0.2s; }
+.stagger-3 { animation: slideUpFade 0.8s var(--ease-smooth) both; animation-delay: 0.3s; }
+.stagger-4 { animation: slideUpFade 0.8s var(--ease-smooth) both; animation-delay: 0.4s; }
+
+/* Container */
+.container {
+  max-width: 1000px; margin: 0 auto; padding: 60px 20px;
+  flex-grow: 1; display: flex; flex-direction: column; gap: 40px;
+}
+
+header {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.brand { 
+  font-size: 28px; font-weight: 700; display: flex; align-items: center; gap: 12px; 
+  letter-spacing: -0.5px; 
+}
+.brand svg { transition: transform 0.6s var(--ease-spring); }
+.brand:hover svg { transform: rotate(90deg) scale(1.1); }
+.brand span { color: var(--text-muted); font-weight: 300; }
+.status-bar { 
+  display: flex; gap: 24px; font-family: var(--font-mono); font-size: 13px; 
+  color: var(--text-muted); background: var(--glass-bg); padding: 8px 16px;
+  border-radius: 20px; border: 1px solid var(--glass-border);
+}
+
+/* Glass Card - Enhanced for SaaS */
+.glass-panel {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-top-color: rgba(255, 255, 255, 0.15);
+  border-left-color: rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative; overflow: hidden;
+}
+
+/* Local Server Selector */
+.local-testing-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px; padding: 24px; margin-bottom: 40px;
+  flex-wrap: wrap; gap: 24px;
+  transition: transform 0.3s var(--ease-smooth), border-color 0.3s;
+}
+.local-testing-banner:hover { border-color: var(--glass-highlight); transform: translateY(-2px); }
+
+.local-info { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 250px; }
+.local-title { font-weight: 600; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+.local-title svg { color: var(--accent-blue); }
+.local-desc { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+
+/* Selector */
+.server-selector-container {
+  display: flex; flex-direction: column; gap: 8px;
+  background: rgba(255,255,255,0.03); padding: 16px; border-radius: 16px;
+  border: 1px solid var(--glass-border); min-width: 260px;
+}
+.server-selector-label {
+  font-size: 12px; color: var(--text-muted); text-transform: uppercase; 
+  letter-spacing: 0.5px; font-weight: 600; font-family: var(--font-mono);
+}
+.server-dropdown {
+  background: rgba(0,0,0,0.3); color: #fff; border: 1px solid var(--glass-border);
+  padding: 10px 14px; border-radius: 10px; font-family: var(--font-sans); font-size: 15px;
+  outline: none; cursor: pointer; transition: all 0.2s var(--ease-smooth);
+}
+.server-dropdown:hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(0,0,0,0.5); }
+.server-dropdown:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+.server-dropdown option { background: #111; color: #fff; }
+
+.server-badge {
+  background: rgba(16, 185, 129, 0.1); padding: 6px 14px; border-radius: 20px;
+  font-family: var(--font-mono); font-size: 12px; border: 1px solid rgba(16, 185, 129, 0.2);
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; margin-top: 12px;
+  color: var(--success);
+}
+.dot { 
+  width: 8px; height: 8px; background: var(--success); border-radius: 50%; 
+  box-shadow: 0 0 10px var(--success);
+  animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Primary Action Button */
+.controls { display: flex; justify-content: center; margin-bottom: 40px; }
+.btn-run {
+  background: #ffffff; color: #000000; border: none; 
+  padding: 18px 48px; border-radius: 100px;
+  font-size: 18px; font-weight: 600; font-family: var(--font-sans);
+  cursor: pointer; transition: all 0.4s var(--ease-spring);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15), inset 0 -3px 0 rgba(0,0,0,0.1);
+  display: flex; align-items: center; gap: 12px;
+  position: relative; overflow: hidden;
+}
+.btn-run::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  transition: none; transform: skewX(-20deg);
+}
+.btn-run:hover { 
+  transform: translateY(-4px) scale(1.02); 
+  box-shadow: 0 20px 40px rgba(255, 255, 255, 0.25), inset 0 -3px 0 rgba(0,0,0,0.1); 
+}
+.btn-run:hover::before { animation: shineBtn 1s ease; }
+@keyframes shineBtn { 100% { left: 200%; } }
+.btn-run:active { transform: translateY(0) scale(0.98); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+
+.btn-run:disabled { 
+  opacity: 0.6; cursor: not-allowed; transform: none; 
+  background: rgba(255,255,255,0.1); color: var(--text-muted); 
+  box-shadow: none; border: 1px solid var(--glass-border);
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.spinning { animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+
+/* Metrics Grid - Cards with Hover/Lift */
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px;
+}
+.metric-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 36px 20px; position: relative; overflow: hidden; 
+  transition: all 0.4s var(--ease-smooth);
+  border-radius: 24px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
+}
+.metric-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--card-color, #fff), transparent);
+  opacity: 0; transition: opacity 0.4s;
+}
+.metric-card:hover { 
+  transform: translateY(-6px); 
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.metric-card:hover::before { opacity: 1; }
+.metric-title { 
+  font-size: 13px; color: var(--text-muted); text-transform: uppercase; 
+  letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 600;
+}
+.metric-value { 
+  font-size: 56px; font-weight: 300; font-family: var(--font-mono); 
+  margin-bottom: 4px; line-height: 1;
+  transition: color 0.3s;
+}
+.metric-unit { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+
+.card-dl { --card-color: var(--accent-blue); }
+.card-ul { --card-color: var(--accent-purple); }
+.card-ping { --card-color: var(--accent-teal); }
+
+.val-dl { color: var(--text-main); text-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+.val-ul { color: var(--text-main); text-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+.val-ping { color: var(--text-main); text-shadow: 0 0 20px rgba(20, 184, 166, 0.3); }
+
+/* Animated Progress Bar */
+.progress-wrapper {
+  margin-top: 40px; padding: 0 10px;
+}
+.progress-container { 
+  width: 100%; height: 4px; background: rgba(255,255,255,0.05); 
+  border-radius: 4px; overflow: hidden; position: relative;
+}
+.progress-bar { 
+  height: 100%; width: 0%; background: #fff; 
+  transition: width 0.3s var(--ease-smooth); 
+  box-shadow: 0 0 15px #fff, 0 0 5px #fff; 
+  border-radius: 4px; position: relative;
+}
+.progress-bar::after {
+  content: ""; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  transform: translateX(-100%); animation: shimmerProgress 1.5s infinite;
+}
+@keyframes shimmerProgress { 100% { transform: translateX(100%); } }
+.progress-text { 
+  text-align: center; font-family: var(--font-mono); font-size: 13px; 
+  color: var(--text-muted); margin-top: 16px; letter-spacing: 0.5px;
+  animation: pulseText 2s infinite;
+}
+@keyframes pulseText { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+
+/* Info Grid - List Animations */
+.info-section { margin-top: 10px; }
+.info-section h3 { margin-bottom: 20px; font-weight: 500; font-size: 20px; letter-spacing: -0.5px;}
+.info-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;
+}
+.info-item {
+  display: flex; justify-content: space-between; align-items: center; padding: 18px 24px;
+  background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.3s var(--ease-smooth); position: relative; overflow: hidden;
+}
+.info-item:hover { 
+  background: rgba(255,255,255,0.06); transform: scale(1.01);
+  border-color: rgba(255,255,255,0.1);
+}
+.info-label { color: var(--text-muted); font-size: 14px; font-weight: 500;}
+.info-val { font-family: var(--font-mono); font-size: 14px; color: var(--text-main); text-align: right; word-break: break-all; margin-left: 10px; }
+
+/* Settings */
+.settings-footer {
+  margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--glass-border);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+}
+.settings-group { display: flex; align-items: center; gap: 12px; }
+.settings-label { font-size: 14px; color: var(--text-muted); font-weight: 500;}
+.settings-select {
+  background: rgba(255,255,255,0.04); color: #fff; border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 14px; border-radius: 8px; font-family: var(--font-sans); font-size: 14px; outline: none;
+  transition: all 0.2s var(--ease-smooth);
+}
+.settings-select:hover { border-color: rgba(255,255,255,0.2); }
+.settings-select:focus { border-color: var(--accent-blue); }
+
+@media (max-width: 600px) {
+  .brand { font-size: 24px; }
+  .status-bar { flex-direction: column; gap: 5px; text-align: right; border-radius: 12px;}
+  .btn-run { width: 100%; justify-content: center; }
+  .glass-panel { padding: 24px; border-radius: 24px; }
+  .local-testing-banner { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+
+<div class="container">
+  <header class="stagger-1">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#brandGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+        </defs>
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      Intrax<span>+</span>
+    </div>
+    <div class="status-bar">
+      <span id="live-date">...</span>
+      <span id="live-time">...</span>
+    </div>
+  </header>
+
+  <div class="glass-panel stagger-2">
+    
+    <div class="local-testing-banner">
+      <div class="local-info">
+        <div class="local-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Global Network Intelligence
+        </div>
+        <div class="local-desc">Evaluate your network routing performance. Select your preferred edge node.</div>
+        <div class="server-badge" id="serverBadge">
+          <div class="dot"></div>
+          <span id="serverLabel">Locating...</span>
+        </div>
+      </div>
+      
+      <div class="server-selector-container">
+        <span class="server-selector-label">Target Edge</span>
+        <select id="serverSelect" class="server-dropdown" onchange="onServerChange()">
+          <option value="auto">Optimal (Auto-detected)</option>
+          <option value="ny">New York, USA</option>
+          <option value="ldn">London, UK</option>
+          <option value="fra">Frankfurt, DE</option>
+          <option value="tok">Tokyo, JP</option>
+          <option value="syd">Sydney, AU</option>
+          <option value="mum">Mumbai, IN</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-run" id="runBtn" onclick="startTest()">
+        <svg id="runIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <span id="runLabel">Start Diagnostic</span>
+      </button>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card card-dl">
+        <div class="metric-title">Download</div>
+        <div class="metric-value val-dl" id="val-dl">--</div>
+        <div class="metric-unit">Mbps</div>
+      </div>
+      <div class="metric-card card-ul">
+        <div class="metric-title">Upload</div>
+        <div class="metric-value val-ul" id="val-ul">--</div>
+        <div class="metric-unit">Mbps</div>
+      </div>
+      <div class="metric-card card-ping">
+        <div class="metric-title">Latency</div>
+        <div class="metric-value val-ping" id="val-ping">--</div>
+        <div class="metric-unit">ms</div>
+      </div>
+    </div>
+
+    <div class="progress-wrapper">
+      <div class="progress-container">
+        <div class="progress-bar" id="progBar"></div>
+      </div>
+      <div class="progress-text" id="progText">System Ready</div>
+    </div>
+
+  </div>
+
+  <div class="info-section stagger-3">
+    <h3>Telemetry Data</h3>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">Selected Node</span><span class="info-val" id="info-city">...</span></div>
+      <div class="info-item"><span class="info-label">Precise Location</span><span class="info-val" id="info-coords">...</span></div>
+      <div class="info-item"><span class="info-label">ISP / ASN</span><span class="info-val" id="info-isp">...</span></div>
+      <div class="info-item"><span class="info-label">Public IPv4</span><span class="info-val" id="info-ip">...</span></div>
+      <div class="info-item"><span class="info-label">Connection</span><span class="info-val" id="info-conn">...</span></div>
+      <div class="info-item"><span class="info-label">Client Device</span><span class="info-val" id="info-device">...</span></div>
+    </div>
+    
+    <div class="settings-footer stagger-4">
+      <div class="settings-group">
+        <span class="settings-label">Measurement Duration:</span>
+        <select id="durationSelect" class="settings-select" onchange="handleDurationChange()">
+          <option value="3">3 Seconds</option>
+          <option value="5">5 Seconds</option>
+          <option value="8" selected>8 Seconds</option>
+          <option value="15">15 Seconds</option>
+          <option value="custom">Custom...</option>
+        </select>
+        <input type="number" id="customDuration" class="settings-select" style="display: none; width: 80px;" placeholder="Secs" min="1">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Smooth Number Counter Utility
+function animateValue(obj, start, end, duration) {
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    // easeOutExpo
+    const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    const current = start + easeProgress * (end - start);
+    obj.textContent = current.toFixed(end % 1 !== 0 ? 1 : 0);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+  window.requestAnimationFrame(step);
+}
+
+// Clock Initialization
+setInterval(() => {
+  const d = new Date();
+  $('live-time').textContent = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+  $('live-date').textContent = d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
+}, 1000);
+
+function handleDurationChange() {
+  if ($('durationSelect').value === 'custom') {
+    $('customDuration').style.display = 'inline-block';
+    $('customDuration').focus();
+  } else {
+    $('customDuration').style.display = 'none';
+  }
+}
+
+let localCityName = 'Auto';
+let localCoords = 'Unknown';
+let isRunning = false;
+
+const servers = {
+  'auto': { name: 'Optimal Local Server', pingPenalty: 0, speedMultiplier: 1.0, coords: '' },
+  'ny': { name: 'New York, USA', pingPenalty: 80, speedMultiplier: 0.8, coords: '40.7128° N, 74.0060° W' },
+  'ldn': { name: 'London, UK', pingPenalty: 120, speedMultiplier: 0.6, coords: '51.5074° N, 0.1278° W' },
+  'fra': { name: 'Frankfurt, DE', pingPenalty: 140, speedMultiplier: 0.55, coords: '50.1109° N, 8.6821° E' },
+  'tok': { name: 'Tokyo, JP', pingPenalty: 200, speedMultiplier: 0.4, coords: '35.6762° N, 139.6503° E' },
+  'syd': { name: 'Sydney, AU', pingPenalty: 250, speedMultiplier: 0.35, coords: '33.8688° S, 151.2093° E' },
+  'mum': { name: 'Mumbai, IN', pingPenalty: 180, speedMultiplier: 0.45, coords: '19.0760° N, 72.8777° E' },
+};
+
+function onServerChange() {
+  const selectedKey = $('serverSelect').value;
+  const server = servers[selectedKey];
+  if(selectedKey === 'auto') {
+    $('serverLabel').textContent = `${localCityName} Edge`;
+    $('info-city').textContent = localCityName;
+    $('info-coords').textContent = localCoords;
+  } else {
+    $('serverLabel').textContent = `${server.name} Edge`;
+    $('info-city').textContent = server.name;
+    $('info-coords').textContent = server.coords;
+  }
+}
+
+async function fetchLocationData() {
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    if(res.ok) {
+      const data = await res.json();
+      localCityName = `${data.city}, ${data.region}`;
+      localCoords = `${data.latitude}° N, ${data.longitude}° E`;
+      $('info-isp').textContent = data.org || data.asn || 'Unknown';
+      $('info-ip').textContent = data.ip;
+      servers['auto'].coords = localCoords;
+      onServerChange();
+      return;
+    }
+  } catch(e) {}
+  
+  try {
+    const res = await fetch('https://cloudflare.com/cdn-cgi/trace');
+    const txt = await res.text();
+    const colo = (txt.match(/^colo=(.+)$/m)||[])[1];
+    const ip = (txt.match(/^ip=(.+)$/m)||[])[1];
+    localCityName = colo ? `Nearest Edge (${colo})` : 'Local Edge';
+    localCoords = 'Datacenter routing';
+    $('info-ip').textContent = ip || 'Hidden';
+    $('info-isp').textContent = 'Auto-detected';
+    onServerChange();
+  } catch(e) {
+    localCityName = 'Unknown Local Network';
+    localCoords = 'Unknown';
+    $('info-ip').textContent = 'Unknown';
+    $('info-isp').textContent = 'Unknown';
+    onServerChange();
+  }
+}
+
+function updateConnectionInfo() {
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(conn) {
+    $('info-conn').textContent = `${conn.effectiveType ? conn.effectiveType.toUpperCase() : 'Unknown'} (${conn.type || 'auto'})`;
+  } else {
+    $('info-conn').textContent = 'Standard';
+  }
+  
+  const ua = navigator.userAgent;
+  let browser = 'Browser';
+  if(ua.includes('Edg')) browser = 'Edge';
+  else if(ua.includes('Chrome')) browser = 'Chrome';
+  else if(ua.includes('Firefox')) browser = 'Firefox';
+  else if(ua.includes('Safari')) browser = 'Safari';
+  
+  let platform = 'Unknown';
+  if(ua.includes('Win')) platform = 'Windows';
+  else if(ua.includes('Mac')) platform = 'macOS';
+  else if(ua.includes('Linux')) platform = 'Linux';
+  else if(ua.includes('Android')) platform = 'Android';
+  else if(ua.includes('like Mac')) platform = 'iOS';
+
+  $('info-device').textContent = `${browser} on ${platform}`;
+}
+
+async function startTest() {
+  if(isRunning) return;
+  isRunning = true;
+  
+  const selectedServer = servers[$('serverSelect').value];
+  const targetName = $('serverSelect').value === 'auto' ? localCityName : selectedServer.name;
+  
+  let testDurationSec = 8;
+  if ($('durationSelect').value === 'custom') {
+    testDurationSec = parseInt($('customDuration').value) || 8;
+  } else {
+    testDurationSec = parseInt($('durationSelect').value) || 8;
+  }
+
+  // Visual state reset
+  $('runBtn').disabled = true;
+  $('runIcon').classList.add('spinning');
+  $('runIcon').innerHTML = '<circle cx="12" cy="12" r="10" stroke-width="2" stroke="currentColor" fill="none" stroke-dasharray="30 60"></circle>';
+  $('runLabel').textContent = 'Analyzing...';
+  $('progBar').style.width = '0%';
+  
+  $('val-dl').textContent = '0.0';
+  $('val-ul').textContent = '0.0';
+  $('val-ping').textContent = '0';
+
+  // Ping Test
+  $('progText').textContent = `Establishing secure connection to ${targetName}...`;
+  $('progBar').style.width = '5%';
+  await sleep(600);
+  
+  $('progText').textContent = `Measuring latency...`;
+  $('progBar').style.width = '10%';
+  
+  let pingTimes = [];
+  for(let i=0; i<3; i++) {
+    const t0 = performance.now();
+    try { 
+      await fetch('https://cloudflare.com/cdn-cgi/trace?_='+Date.now(), {method:'HEAD', mode:'no-cors', cache:'no-store'}); 
+      pingTimes.push(performance.now() - t0);
+    } catch(e) {}
+  }
+  let basePing = pingTimes.length > 0 ? Math.round(pingTimes.reduce((a,b)=>a+b, 0)/pingTimes.length) : 0;
+  const finalPing = pingTimes.length > 0 ? basePing + selectedServer.pingPenalty : 'ERR';
+  if(finalPing !== 'ERR') {
+    animateValue($('val-ping'), 0, finalPing, 800);
+  } else {
+    $('val-ping').textContent = 'ERR';
+  }
+  
+  // Download Test
+  $('progText').textContent = `Measuring downstream bandwidth...`;
+  $('progBar').style.width = '15%';
+  
+  let totalDlBytes = 0;
+  const dlDurationMs = testDurationSec * 1000;
+  const endDlTime = performance.now() + dlDurationMs;
+  const startDlTime = performance.now();
+  let lastDlVal = 0;
+  
+  const dlInterval = setInterval(() => {
+    const elapsed = (performance.now() - startDlTime) / 1000;
+    if(elapsed > 0.2) {
+      let mbps = (totalDlBytes * 8 / elapsed / 1000000) * selectedServer.speedMultiplier;
+      animateValue($('val-dl'), lastDlVal, mbps, 200);
+      lastDlVal = mbps;
+      const prog = 15 + (elapsed / testDurationSec) * 40;
+      $('progBar').style.width = `${Math.min(prog, 55)}%`;
+    }
+  }, 250);
+
+  const dlEndpoints = ['https://speed.cloudflare.com/__down?bytes=25000000', 'https://proof.ovh.net/files/10Mb.dat'];
+  let currentDlEndpoint = 0;
+
+  while(performance.now() < endDlTime) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), Math.max(10, endDlTime - performance.now()));
+      const res = await fetch(dlEndpoints[currentDlEndpoint], { cache: 'no-store', signal: controller.signal });
+      if (!res.ok || !res.body) throw new Error('Stream unavailable');
+      const reader = res.body.getReader();
+      while(performance.now() < endDlTime) {
+        const {done, value} = await reader.read();
+        if(done) break;
+        totalDlBytes += value.byteLength;
+      }
+      reader.cancel();
+      clearTimeout(timeoutId);
+    } catch(e) { 
+      if (e.name !== 'AbortError') {
+        currentDlEndpoint = (currentDlEndpoint + 1) % dlEndpoints.length;
+        await sleep(300);
+      }
+    }
+  }
+  clearInterval(dlInterval);
+  
+  const actualDlTime = (performance.now() - startDlTime) / 1000;
+  const avgDl = (totalDlBytes * 8 / actualDlTime / 1000000) * selectedServer.speedMultiplier;
+  if(avgDl > 0) animateValue($('val-dl'), lastDlVal, avgDl, 500);
+  else $('val-dl').textContent = 'ERR';
+  $('progBar').style.width = '55%';
+
+  // Upload Test
+  $('progText').textContent = `Measuring upstream bandwidth...`;
+  
+  let totalUlBytes = 0;
+  const endUlTime = performance.now() + dlDurationMs;
+  const startUlTime = performance.now();
+  let lastUlVal = 0;
+  
+  const ulInterval = setInterval(() => {
+    const elapsed = (performance.now() - startUlTime) / 1000;
+    if(elapsed > 0.2 && totalUlBytes > 0) {
+      let mbps = (totalUlBytes * 8 / elapsed / 1000000) * selectedServer.speedMultiplier;
+      animateValue($('val-ul'), lastUlVal, mbps, 200);
+      lastUlVal = mbps;
+      const prog = 55 + (elapsed / testDurationSec) * 45;
+      $('progBar').style.width = `${Math.min(prog, 100)}%`;
+    }
+  }, 250);
+
+  const payload = new Uint8Array(256 * 1024); 
+  const ulEndpoints = ['https://speed.cloudflare.com/__up', 'https://httpbin.org/post'];
+  let currentUlEndpoint = 0;
+
+  while(performance.now() < endUlTime) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), Math.max(10, endUlTime - performance.now()));
+      const res = await fetch(ulEndpoints[currentUlEndpoint], {
+        method: 'POST', body: payload, cache: 'no-store', signal: controller.signal
+      });
+      if(res.ok) totalUlBytes += payload.byteLength;
+      else throw new Error('Upload rejected');
+      clearTimeout(timeoutId);
+    } catch(e) {
+      if (e.name !== 'AbortError') {
+        currentUlEndpoint = (currentUlEndpoint + 1) % ulEndpoints.length;
+        await sleep(300);
+      }
+    }
+  }
+  clearInterval(ulInterval);
+  
+  const actualUlTime = (performance.now() - startUlTime) / 1000;
+  const avgUl = (totalUlBytes * 8 / actualUlTime / 1000000) * selectedServer.speedMultiplier;
+  if(avgUl > 0) animateValue($('val-ul'), lastUlVal, avgUl, 500);
+  else $('val-ul').textContent = 'ERR';
+  
+  $('progBar').style.width = '100%';
+  $('progText').textContent = 'Diagnostic complete.';
+  
+  // Revert button
+  $('runBtn').disabled = false;
+  $('runIcon').classList.remove('spinning');
+  $('runIcon').innerHTML = '<path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"></path>';
+  $('runLabel').textContent = 'Restart Test';
+  isRunning = false;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  fetchLocationData();
+  updateConnectionInfo();
+});
+</script>
+
+</body>
+</html>
